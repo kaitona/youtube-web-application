@@ -13,26 +13,26 @@ with open("secret.json") as f:
     keys = json.load(f)
 
 #youtubeの動画検索システムをつかい、検索結果をjson形式で取得する関数
-def youtube_request(youtube, query, page_token=None):
+def youtube_request(youtube, query, target, page_token=None):
     response = youtube.search().list(
             q=query,
             part="id,snippet",
             maxResults=50,
             pageToken=page_token,
-            order="relevance",
+            order=target,
             type="video"
         ).execute()
     return response
 
 #入力したクエリから動画を検索し、簡易的な情報をDataFrameにまとめる関数
-def search_function(keys, key, query, recursion_count, default_df, page_token=None):
+def search_function(keys, key, recursion_count, target, default_df, query, page_token=None):
     youtube = set_developerkey(keys, key)
-    try:
-        response = youtube_request(youtube, query, page_token)
-    except HTTPError:
-        if key >= 4: st.error("本日の利用可能上限に達しました")
-        key += 1
-        youtube = search_function(keys, key, query, recursion_count, default_df, page_token)
+    #try:
+    response = youtube_request(youtube, query, target, page_token)
+    #except HTTPError:
+    #    if key >= 4: st.error("本日の利用可能上限に達しました")
+    #    key += 1
+    #   youtube = search_function(keys, key, recursion_count, default_df, query, page_token)
     
 
     if "nextPageToken" in response: next_page = response["nextPageToken"]
@@ -56,7 +56,7 @@ def search_function(keys, key, query, recursion_count, default_df, page_token=No
     results = vertical_dataframe_join(default_df, results)
 
     if recursion_count <=0: return results
-    else: return search_function(keys, key, query, recursion_count-1, results, next_page)
+    else: return search_function(keys, key, recursion_count-1, results, query, next_page)
 
 #search_functionで得た動画IDの配列から動画IDに対応した動画の各情報を取得し、DataFrameにまとめる関数
 def video_data(youtube, video_ids):
@@ -125,9 +125,19 @@ def st_video_show(video_id):
     video_erea.video(video_url)
 
 #以下でstreamlit上での画面構築やmain処理
+target_dict = {
+    "新しい動画":"date",
+    "高評価が多い動画":"rating",
+    "関連した動画":"relevance",
+    "高再生数の動画":"viewCount"
+}
 st.title("Youtube 高評価の多い動画検索")
 st.write("動画一覧")
 query = st.sidebar.text_input("クエリを入力してください")
+target_videos = st.sidebar.selectbox(
+    "取得したい動画の特徴を選択してください",
+    ["新しい動画","高評価が多い動画","関連した動画","高再生数の動画"]
+)
 num_of_videos = st.sidebar.selectbox(
     "取得したい動画の数を選択してください",
     [i*50 for i in range(1,10)]
@@ -135,7 +145,7 @@ num_of_videos = st.sidebar.selectbox(
 
 df_columns = ["video_id", "title", "view_count", "like_count", "point", "comment_count", "channel_id", "channel_title"]
 default_df = pd.DataFrame(data=None, columns=df_columns)
-response = search_function(keys, 0, query, num_of_videos/50-1, default_df).sort_values("point", ascending=False)
+response = search_function(keys, 0, num_of_videos/50-1, target_dict[target_videos], default_df, query).sort_values("point", ascending=False)
 sorted_df = df_formatting(response, "index")
 
 st.dataframe(sorted_df)
