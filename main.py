@@ -124,13 +124,14 @@ def st_video_show(video_id):
     video_erea = st.empty()
     video_erea.video(video_url)
 
-#以下でstreamlit上での画面構築やmain処理
+#並べ替えクエリの設定
 target_dict = {
     "新しい動画":"date",
     "高評価が多い動画":"rating",
     "関連した動画":"relevance",
     "高再生数の動画":"viewCount"
 }
+#以下でstreamlit上での画面構築やmain処理
 st.title("Youtube 高評価の多い動画検索")
 st.write("動画一覧")
 query = st.sidebar.text_input("クエリを入力してください")
