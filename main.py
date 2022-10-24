@@ -56,7 +56,7 @@ def search_function(keys, key, recursion_count, target, default_df, query, page_
     results = vertical_dataframe_join(default_df, results)
 
     if recursion_count <=0: return results
-    else: return search_function(keys, key, recursion_count-1, results, query, next_page)
+    else: return search_function(keys, key, recursion_count-1, target, results, query, next_page)
 
 #search_functionで得た動画IDの配列から動画IDに対応した動画の各情報を取得し、DataFrameにまとめる関数
 def video_data(youtube, video_ids):
