@@ -71,9 +71,9 @@ def video_data(youtube, video_ids):
         except:
             video_item["like_count"] = 0
 
-        if video_item["like_count"] > 0 and int(item["statistics"]["viewCount"]) > 0:
+        try:
             video_item["point"] = round(int(item["statistics"]["likeCount"])/int(item["statistics"]["viewCount"])*10**4,1)
-        else:
+        except:
             video_item["point"] = 0
         try:
             video_item["comment_count"] = int(item["statistics"]["commentCount"])
