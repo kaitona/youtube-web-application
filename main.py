@@ -27,12 +27,7 @@ def youtube_request(youtube, query, target, page_token=None):
 #入力したクエリから動画を検索し、簡易的な情報をDataFrameにまとめる関数
 def search_function(keys, key, recursion_count, target, default_df, query, page_token=None):
     youtube = set_developerkey(keys, key)
-    #try:
     response = youtube_request(youtube, query, target, page_token)
-    #except HTTPError:
-    #    if key >= 4: st.error("本日の利用可能上限に達しました")
-    #    key += 1
-    #   youtube = search_function(keys, key, recursion_count, default_df, query, page_token)
     
 
     if "nextPageToken" in response: next_page = response["nextPageToken"]
