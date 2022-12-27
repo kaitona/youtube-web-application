@@ -31,10 +31,10 @@ pip install google-api-client=2.38.0
 次のURLでアプリを起動できます
 https://kaitona-youtube-web-application-main-a73fcg.streamlit.app
 
-#注意事項
+# 注意事項
 
 使用時にHttpErrorというものが出てくることがありますが、それは一日のYoutube Data APIの利用上限に達したことを表します。翌日以降お試しください。
 
-#作成者情報
+# 作成者情報
 
 作成者:kaitona
