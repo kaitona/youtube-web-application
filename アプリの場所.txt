@@ -1,4 +1,0 @@
-次のURLでアプリを起動できます
-https://kaitona-youtube-web-application-main-a73fcg.streamlit.app/
-
-できなかった場合は実際にgit cloneしてお試しください
