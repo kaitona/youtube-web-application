@@ -20,7 +20,7 @@ google-api-python-client==2.38.0
 
 # ライブラリのインストール方法
 
-'''
+'''bash
 pip install streamlit==1.5.0
 pip install google-api-client=2.38.0
 '''
